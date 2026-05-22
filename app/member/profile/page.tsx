@@ -16,7 +16,7 @@ export default function MemberProfile() {
 
             <input
               type="text"
-              value="Rahul Sharma"
+              value=""
               className="w-full border rounded-xl p-3"
             />
           </div>
@@ -28,7 +28,7 @@ export default function MemberProfile() {
 
             <input
               type="email"
-              value="rahul@gmail.com"
+              value=""
               className="w-full border rounded-xl p-3"
             />
           </div>
@@ -40,7 +40,7 @@ export default function MemberProfile() {
 
             <input
               type="text"
-              value="9876543210"
+              value=""
               className="w-full border rounded-xl p-3"
             />
           </div>
