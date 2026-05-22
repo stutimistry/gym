@@ -2,6 +2,7 @@
 'use client'
 
 import Link from 'next/link'
+import { supabase } from '../lib/supabase'
 
 import {
   usePathname,
@@ -28,10 +29,8 @@ export default function DashboardLayout({
 
   const router = useRouter()
 
-  // LOGOUT
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     router.push('/login')
   }
 

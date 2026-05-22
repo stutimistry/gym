@@ -4,7 +4,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { supabase } from '../../app/lib/supabase'
+import { supabase } from '../lib/supabase'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
@@ -29,7 +29,21 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/dashboard')
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', authData.user.id)
+      .single()
+
+    const role = profile?.role
+
+    if (role === 'trainer') {
+      router.push('/trainer/dashboard')
+    } else if (role === 'member') {
+      router.push('/member/dashboard')
+    } else {
+      router.push('/dashboard')
+    }
   }
 
   return (

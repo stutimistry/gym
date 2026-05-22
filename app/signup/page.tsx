@@ -62,29 +62,30 @@ export default function SignupPage() {
       })
 
     if (error) {
-      setError(error.message)
+      if (error.message.toLowerCase().includes('rate limit') || error.status === 429) {
+        setError('Too many signups. Please wait a few minutes and try again, or disable email confirmation in Supabase.')
+      } else {
+        setError(error.message)
+      }
       setLoading(false)
       return
     }
 
-    // SAVE USER DATA
     const userId = data.user?.id
 
     if (userId) {
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
-        .insert([
-          {
-            id: userId,
-            full_name: name,
-            email: email,
-            role: role,
-          },
-        ])
+        .insert([{ id: userId, full_name: name, email, role }])
+
+      if (profileError) {
+        setError('Account created but profile save failed: ' + profileError.message)
+        setLoading(false)
+        return
+      }
     }
 
     setLoading(false)
-
     router.push('/login')
   }
 
